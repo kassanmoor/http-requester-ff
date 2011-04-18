@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://poster/skin/default.css" type="text/css"?>
+<window id="request-entry-window" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+   title="Poster++" persist="width height" 
+   xmlns:h="http://www.w3.org/1999/xhtml" flex="1" 
+   windowtype="window:poster-request"
+   onload="RequestEntry.loadRequest();">
+
+   <script type="application/x-javascript" src="chrome://poster/content/poster.js"/>
+   <script type="application/x-javascript" src="chrome://poster/content/request-entry.js"/>
+   	<keyset id="posterKeys">
+		<key keycode="VK_ESCAPE" oncommand="window.close();"/>
+	</keyset>
+	
+   <vbox flex="3">
+   	
+	 <textbox id="content" multiline="true" flex="2"/>
+	 <spacer/>
+      <hbox class="small-buttons">
+	      <button label="Paste from clipboard" tooltiptext="Paste Request" oncommand="RequestEntry.pasteFromClipboard();"/>
+		  <spacer flex="5"/>
+	      <button label="Cancel"  oncommand="window.close();"/>
+		  <button label="Execute" tooltiptext="Execute the HTTP Request" oncommand="RequestEntry.doRequest();"/>
+      </hbox>
+
+ </vbox>
+
+
+</window>

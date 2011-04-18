@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://poster/skin/default.css" type="text/css"?>
+<page id="poster-window" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+   title="Poster++" persist="width height"  width="400px" height="600px"
+   xmlns:h="http://www.w3.org/1999/xhtml" flex="1" onload="App.init()"
+   windowtype="window:poster"
+   onunload="App.saveSettings();">
+
+   <script type="application/x-javascript" src="chrome://poster/content/poster.js"/>
+   <script type="application/x-javascript" src="chrome://poster/content/HTTP.js"/> 
+   <script type="application/x-javascript" src="chrome://poster/content/Base64.js"/>
+   <script type="application/x-javascript" src="chrome://poster/content/Response.js"/>
+   
+   	<keyset id="posterKeys">
+		<key keycode="VK_ESCAPE" oncommand="window.close();"/>
+	</keyset>
+	
+   <vbox flex="3">
+   <hbox flex="3">
+   	  <groupbox flex="2">
+      <caption label="Request"/>
+   	<vbox flex="3">
+      <description flex="3" hidden="true">Select a file or enter content to POST or PUT to a URL and then specify the mime type you'd like or just
+      use the GET, HEAD, or DELETE methods on a URL.</description>
+      <grid>
+         <columns>
+            <column/>
+            <column flex="1"/>
+            <column/>
+         </columns>
+         <rows>
+            <row>
+               <label value="URL:"/>
+			   <menulist id="url"  editable="true" flex="2" onkeypress="App.getURLHotKey(event);" >
+					<menupopup>
+					</menupopup>
+				</menulist>
+            </row>
+			
+            <row id="advancedSettings1" hidden="true">
+               <label value="User Auth:"/>
+               <hbox flex="1">
+                  <textbox id='username' flex="1"/><textbox id='password' type='password' flex="1"/><button id="google-login" label="Google Login" oncommand="App.showGoogleLogin()"/>
+               </hbox>
+            </row>
+            <row id="advancedSettings2" hidden="true">
+               <label value="Timeout:"/>
+               <hbox flex="1">
+                  <scale id='timeout-slider' min="1" max="360" value="30" flex="2"/><textbox id='timeout' value="30" size="5" flex="1"/>
+               </hbox>
+            </row>
+            <row id="advancedSettings3" hidden="true">
+               <label value="Settings:"/>
+               <hbox class="small-buttons">
+                  <button label="Save" tooltiptext="Save values as preferences." oncommand="App.savePreferences()"/>
+                  <button label="Import" tooltiptext="Import current stored values." oncommand="App.importValues()"/>
+                  <button label="Store" tooltiptext="Store current values for use later in browser session." oncommand="App.saveValues()"/>
+               </hbox>
+            </row>
+			
+         </rows>
+      </grid>
+      <hbox class="small-buttons">
+	      <menulist id="method">
+	         <menupopup>
+	            <menuitem label="GET" value="GET"/>
+	            <menuitem label="POST" value="POST"/>
+	            <menuitem label="PUT" value="PUT"/>
+	            <menuitem label="DELETE" selected="true" value="DELETE"/>
+	            <menuitem label="HEAD" value="HEAD"/>
+	            <menuitem label="OPTIONS" value="OPTIONS"/>
+	            <menuitem label="PROFIND" value="PROPFIND"/>
+	            <menuitem label="COPY" value="COPY"/>
+	            <menuitem label="MOVE" value="MOVE"/>
+	         </menupopup>
+	      </menulist>
+	      <button label="Submit" tooltiptext="Send the HTTP Request" oncommand="App.doMethodRequest();"/>
+		  <separator orient="vertical" class="thin"/>
+	      <button label="GET" tooltiptext="GET Request" oncommand="App.getURL();"/>
+	      <button label="POST" tooltiptext="POSt Request" oncommand="App.postURL();"/>
+	      <button label="PUT" tooltiptext="PUT Request" oncommand="App.putURL();"/>
+		  <separator orient="vertical" class="groove"/>
+	 	  <button label="New request" tooltiptext="Clear values to create a new empty request" oncommand="App.clearRequest()"/>
+		  <button label="Paste Request" tooltiptext="Paste request from clipboard" oncommand="App.pasteRawRequest()"/>
+	     
+      </hbox>
+<!--
+      <grid>
+         <columns>
+            <column/>
+            <column  flex="1"/>
+            <column/>
+         </columns>
+         <rows>
+            <row class="small-buttons">
+               <label value="Options:"/>
+               <menulist id="content-options">
+                  <menupopup>
+                     <menuitem label="Headers" selected="true" value="headers"/>
+                     <menuitem label="Parameters" value="parameters"/>
+                     <menuitem label="Parameter Body" value="parameter-body"/>
+                  </menupopup>
+               </menulist>
+               <button label="GO" tooltiptext="Make HTTP Request" oncommand="App.doContent();"/>
+            </row>
+         </rows>
+      </grid>
+-->
+      <tabbox id='content-tabs' flex="2">
+         <tabs>
+            <tab label="Content to Send"/>
+            <tab label="Headers"/>
+            <tab label="Parameters"/>
+         </tabs>
+         <tabpanels flex="2">
+
+           <vbox flex="1">
+             <grid>
+               <columns>
+                  <column/>
+                  <column flex="1"/>
+               </columns>
+               <rows>
+                  <row>
+                      <label value="File:"/>
+                      <hbox>
+                         <textbox id="filename" flex="2"/>
+                         <button id="browse-file" label="Browse..." tooltiptext="Browse for file." oncommand="App.browseForFile()"/>
+                      </hbox>
+                  </row>
+                  <row>
+                     <label value="Content Type:"/>
+                     <hbox>
+						<menulist id="ctype"  editable="true" flex="2" >
+							<menupopup>
+							</menupopup>
+						</menulist>
+					 </hbox>
+                  </row>
+                  <row>
+                    <label value="Content Options:"/>
+                    <hbox><button id='base64-encode' label="Base64"/><button label="Parameter Body" oncommand="App.makeParameterPost()"/></hbox>
+                  </row>
+                 </rows>
+             </grid>
+             <textbox id="content" multiline="true" flex="2"/>
+           </vbox>
+           <vbox flex="1">
+            <hbox align="center">
+               <label value="Name:"/>
+			   <menulist id="header-name"  editable="true" flex="1" >
+					<menupopup>
+					</menupopup>
+				</menulist>
+			   
+			   <label value="Value:"/><textbox id="header-value" flex="2"/><button label="Add/Change" oncommand="App.onAddChangeHeader()"/>
+            </hbox>
+            <listbox id="header-list" seltype="multiple">
+               <listhead>
+                  <listheader label="Name"/>
+                  <listheader label="Value"/>
+               </listhead>
+               <listcols>
+                  <listcol flex="1"/>
+                  <splitter/>
+                  <listcol flex="2"/>
+               </listcols>
+            </listbox>
+           </vbox>
+           <vbox flex="1">
+            <hbox align="center">
+               <label value="Name:"/>
+               <textbox id="parameter-name"  flex="1"/><label value="Value:"/><textbox id="parameter-value" flex="2"/><button label="Add/Change" oncommand="App.onAddChangeParameter()"/>
+            </hbox>
+            <listbox id="parameter-list" seltype="multiple">
+               <listhead>
+                  <listheader label="Name"/>
+                  <listheader label="Value"/>
+               </listhead>
+               <listcols>
+                  <listcol flex="1"/>
+                  <splitter/>
+                  <listcol flex="2"/>
+               </listcols>
+            </listbox>
+           </vbox>
+         </tabpanels>
+      </tabbox>
+   </vbox>
+   </groupbox>
+   
+    <!-- response area -->
+	<groupbox flex="100">
+      	<caption label="Response"/>
+		<vbox  style="overflow: auto" flex="100">
+	      <description id="title"/>
+	      <hbox>
+	         <label value="Status:"/>
+	         <label id="code" value=""/>
+	      </hbox>
+	      <textbox id="response-content" multiline="true" flex="3"/>
+	      <vbox>
+	         <label value="Headers:"/>
+	         <grid flex="1">
+	            <columns>
+	               <column/>
+	               <column flex="1"/>
+	            </columns>
+	            <rows id="headers"/>
+	         </grid>
+	      </vbox>
+		  <!--
+	      <button label="Close" oncommand="window.close();"/>
+		  -->
+	   </vbox>
+   </groupbox>
+  
+   </hbox>
+   
+    <!-- list of requests --> 
+	<groupbox>
+      	<caption label="History"/>
+	  	<hbox>
+		   <vbox flex="100">
+	           <listbox id="transaction-list" onselect="App.selectListItem()">
+	               <listhead>
+	                  <listheader label="Request"/>
+	                  <listheader label="Response"/>
+					  <listheader label="Time"/>
+					  <listheader label="ElapsedTime"/>
+	               </listhead>
+	               <listcols>
+	                  <listcol flex="3"/>
+	                  <splitter class="tree-splitter" />
+	                  <listcol flex="1"/>
+					  <splitter class="tree-splitter" />
+	                  <listcol flex="2"/>
+					  <splitter class="tree-splitter" />
+	                  <listcol/>
+	               </listcols>
+	            </listbox>
+		   </vbox>
+		   <!-- action buttons -->
+		    <vbox class="small-buttons">
+		      <button label="Clear history" tooltiptext="Clear entire history of requests" oncommand="App.clearHistory();"/>
+		      <button label="Copy to clipboard" tooltiptext="Copy request/response transaction to clipboard" oncommand="App.copyToClipBoard();"/>
+			  <button label="Delete request" tooltiptext="Delete selected transaction from list" oncommand="App.onDeleteTransaction();"/>
+			  <button label="Edit raw request" tooltiptext="Edit raw request" oncommand="App.editRawRequest();"/>
+			  <separator />
+			  <button label="Save request" tooltiptext="Store selected request" oncommand="App.saveStoredRequest();"/>
+			  <button label="Load request" tooltiptext="Load stored request" oncommand="App.loadStoredRequest();"/>
+			</vbox> 
+		</hbox>
+   </groupbox>
+ </vbox>
+</page>

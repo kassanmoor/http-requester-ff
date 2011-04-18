@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://poster/skin/overlay.css" type="text/css"?>
+<overlay id="poster-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="overlay.js"/>
+
+<!--
+  <menupopup id="viewSidebarMenu">
+    <menuitem key="key_openPosterSidebar" observes="viewPosterSidebar" />
+  </menupopup>
+
+  <keyset id="mainKeyset">
+    <key id="key_openPosterSidebar" command="viewPosterSidebar"
+         key="P" 
+         modifiers="control shift " />
+  </keyset>
+
+  <broadcasterset id="mainBroadcasterSet">
+    <broadcaster id="viewPosterSidebar"
+      autoCheck="false"
+      label="Poster"
+      type="checkbox" group="sidebar"
+      sidebarurl="chrome://poster/content/poster.xul"
+
+      sidebartitle="Poster"
+      oncommand="toggleSidebar('viewPosterSidebar');"/>
+  </broadcasterset>
+-->
+
+  <keyset id="mainKeyset">
+    <key id="key_openPoster" command="poster:open"
+         key="P"
+         modifiers="accel,alt" />
+  </keyset>
+
+  <commandset id="mainCommandSet">
+     <command id="poster:open" oncommand="showPoster();"/>
+  </commandset>
+
+  <menupopup id="menu_ToolsPopup">
+      <menuitem label="Poster" key="key_openPoster" accesskey="p" command="poster:open"/>
+  </menupopup>
+
+  <statusbar id="status-bar">
+    <statusbarpanel id="poster-status-bar" class="poster-status-bar"
+                    context="poster-status-manage"
+                    onmousedown=";">
+      <toolbarbutton image="chrome://poster/skin/status-icon-16x16.png" tooltiptext="Open Poster" oncommand="showPoster();"/>
+    </statusbarpanel>
+  </statusbar>
+
+</overlay>
