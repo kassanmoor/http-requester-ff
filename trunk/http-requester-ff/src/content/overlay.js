@@ -1,7 +1,9 @@
-function showPoster() {
+if(!httprequester) var httprequester={};
+
+httprequester.showHttpRequester = function() {
    var windowManager = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService();
    var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
-   var topWindow = windowManagerInterface.getMostRecentWindow("window:poster");
+   var topWindow = windowManagerInterface.getMostRecentWindow("window:httprequester");
    if (topWindow) {
    		try { 
     		 topWindow.focus();
@@ -11,7 +13,7 @@ function showPoster() {
    }
    else {
 	   window.openDialog(
-	      'chrome://poster/content/poster-window.xul','poster-'+(new Date()).getTime(),'chrome,centerscreen,resizable,dialog=no'
+	      'chrome://httprequester/content/httprequester-window.xul','httprequester-'+(new Date()).getTime(),'chrome,centerscreen,resizable,dialog=no'
 	   );
    	}
    

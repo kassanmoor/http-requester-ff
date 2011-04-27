@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://poster/skin/default.css" type="text/css"?>
+<?xml-stylesheet href="chrome://httprequester/skin/default.css" type="text/css"?>
 <window id="request-entry-window" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
-   title="Poster++" persist="width height" 
+   title="HttpRequester" persist="width height" 
    xmlns:h="http://www.w3.org/1999/xhtml" flex="1" 
-   windowtype="window:poster-request"
+   windowtype="window:httprequester-request"
    onload="RequestEntry.loadRequest();">
 
-   <script type="application/x-javascript" src="chrome://poster/content/poster.js"/>
-   <script type="application/x-javascript" src="chrome://poster/content/request-entry.js"/>
-   	<keyset id="posterKeys">
+   <script type="application/x-javascript" src="chrome://httprequester/content/httprequester.js"/>
+   <script type="application/x-javascript" src="chrome://httprequester/content/request-entry.js"/>
+   	<keyset id="httprequesterKeys">
 		<key keycode="VK_ESCAPE" oncommand="window.close();"/>
 	</keyset>
 	

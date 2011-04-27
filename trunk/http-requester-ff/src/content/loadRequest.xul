@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://poster/skin/default.css" type="text/css"?>
+<?xml-stylesheet href="chrome://httprequester/skin/default.css" type="text/css"?>
 <window id="loadRequest" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
         title="Load Stored Request"
         xmlns:h="http://www.w3.org/1999/xhtml" flex="1"        onload="LoadRequest.load();">
-        <script type="application/x-javascript" src="chrome://poster/content/poster.js"/>
-  	 	<script type="application/x-javascript" src="chrome://poster/content/loadRequest.js"/> 
+        <script type="application/x-javascript" src="chrome://httprequester/content/httprequester.js"/>
+  	 	<script type="application/x-javascript" src="chrome://httprequester/content/loadRequest.js"/> 
         
         <vbox>
 	        <listbox id="saved_requests_listbox" style="overflow: auto;" width="750"
