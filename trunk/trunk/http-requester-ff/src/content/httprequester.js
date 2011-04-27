@@ -41,7 +41,7 @@ var App = {
 	},
    
    getPreferenceString: function(name){
-      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.poster.");
+      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.httprequester.");
       if (preferencesService) {
          try {
             return preferencesService.getCharPref(name);
@@ -52,7 +52,7 @@ var App = {
       return null;
    },
    getPreferenceComplex: function(name){
-      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.poster.");
+      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.httprequester.");
       if (preferencesService) {
          try {
             return preferencesService.getComplexValue(name, Components.interfaces.nsISupportsString).data;
@@ -64,7 +64,7 @@ var App = {
    },
    setPreferenceComplex: function(name, value){
       var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].
-	  	getService(Components.interfaces.nsIPrefService).getBranch("extensions.poster.");
+	  	getService(Components.interfaces.nsIPrefService).getBranch("extensions.httprequester.");
       if (preferencesService) {
          try {
 		 	var sString = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
@@ -76,7 +76,7 @@ var App = {
       }
    },
      getPreferenceInt: function(name){
-      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.poster.");
+      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.httprequester.");
       if (preferencesService) {
          try {
             return preferencesService.getIntPref(name);
@@ -87,7 +87,7 @@ var App = {
       return null;
    },
     getPreferenceBool: function(name){
-      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.poster.");
+      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.httprequester.");
       if (preferencesService) {
          try {
             return preferencesService.getBoolPref(name);
@@ -99,7 +99,7 @@ var App = {
    },
 
    setPreferenceString: function(name,value){
-      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.poster.");
+      var preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.httprequester.");
       if (preferencesService) {
          preferencesService.setCharPref(name,value);
       }
@@ -142,18 +142,18 @@ var App = {
 	}
 	  // There was a component that handled storing some values; this no longer works 
 	  // in Firefox 4, so was removed.  The values are instead stored to the preferences.
-	  var posterService = new Object();
-      //alert("Initializing with "+posterService);
-      //if (!posterService.contentType) {
-        posterService.contentType = this.getPreferenceString("contentType");
+	  var httprequesterService = new Object();
+      //alert("Initializing with "+httprequesterService);
+      //if (!httprequesterService.contentType) {
+        httprequesterService.contentType = this.getPreferenceString("contentType");
       //}
-      //if (!posterService.contentType) {
-         posterService.contentType = "text/xml";
+      //if (!httprequesterService.contentType) {
+         httprequesterService.contentType = "text/xml";
       //}
-      //if (!posterService.url) {
-         posterService.url = this.getPreferenceString("url");
+      //if (!httprequesterService.url) {
+         httprequesterService.url = this.getPreferenceString("url");
       //}
-      posterService.file = "";
+      httprequesterService.file = "";
       
       this.elements["filename"] = document.getElementById("filename");
       this.elements["contentType"] = document.getElementById("ctype");
@@ -164,14 +164,14 @@ var App = {
       this.elements["timeout-slider"] = document.getElementById("timeout-slider");
       this.elements["timeout"] = document.getElementById("timeout");
       
-      this.elements["filename"].value = posterService.file;
-      this.elements["contentType"].value = posterService.contentType;
-      this.elements["url"].value = posterService.url;
-      if (posterService.username) {
-         this.elements["username"].value = posterService.username;
+      this.elements["filename"].value = httprequesterService.file;
+      this.elements["contentType"].value = httprequesterService.contentType;
+      this.elements["url"].value = httprequesterService.url;
+      if (httprequesterService.username) {
+         this.elements["username"].value = httprequesterService.username;
       }
-      if (posterService.password) {
-         this.elements["password"].value = posterService.password;
+      if (httprequesterService.password) {
+         this.elements["password"].value = httprequesterService.password;
       }
       var current = this;
       this.elements["timeout-slider"].onchange = function() {
@@ -205,7 +205,7 @@ var App = {
 	  
 	  
 	  // load history
-	  //pref("extensions.poster.history", 25);
+	  //pref("extensions.httprequester.history", 25);
 	   var history = this.getPreferenceComplex("history");
 	   if (history != null && history.length > 0) {
 	  	 this.transactions = JSON.parse(history);
@@ -295,7 +295,7 @@ var App = {
       if(fp.show() == nsIFilePicker.returnOK) {
          var filenm = this.elements["filename"];
          var item = filenm.value = fp.file.path;
-         //posterService.file = fp.file.path;
+         //httprequesterService.file = fp.file.path;
          try {
             this.elements["contentType"].value = mimeService.getTypeFromFile(fp.file);
          } catch (ex) {
@@ -312,7 +312,7 @@ var App = {
          auth: null
       };
       window.openDialog(
-         'chrome://poster/content/google-login.xul','google-login','modal,centerscreen,chrome,resizable',
+         'chrome://httprequester/content/google-login.xul','google-login','modal,centerscreen,chrome,resizable',
          data
       );
       if (data.success) {
@@ -327,7 +327,7 @@ var App = {
    showEncoder: function() {
       var currentApp = this;
       window.openDialog(
-         'chrome://poster/content/encoder.xul','encoder','centerscreen,chrome,resizable'
+         'chrome://httprequester/content/encoder.xul','encoder','centerscreen,chrome,resizable'
       );
    },
    
@@ -479,7 +479,7 @@ var App = {
       }
       var title = this.synopsis;
 //      var resultWindow = window.openDialog(
-//         'chrome://poster/content/response.xul','response'+(new Date()).getTime(),'centerscreen,chrome,resizable',
+//         'chrome://httprequester/content/response.xul','response'+(new Date()).getTime(),'centerscreen,chrome,resizable',
 //         {
 //            title: title,
 //            status: status,
@@ -634,7 +634,7 @@ var App = {
               onOpened: function(request) {
                  if (!currentApp.progressDialog) {
                      currentApp.progressDialog = window.openDialog(
-                        'chrome://poster/content/progress.xul','progress'+(new Date()).getTime(),'centerscreen,chrome,resizable',
+                        'chrome://httprequester/content/progress.xul','progress'+(new Date()).getTime(),'centerscreen,chrome,resizable',
                         {
                            url: urlstr,
                            status: "Sending...",
@@ -1036,7 +1036,7 @@ var App = {
               onOpened: function(request) {
                  if (!currentApp.progressDialog) {
                      currentApp.progressDialog = window.openDialog(
-                        'chrome://poster/content/progress.xul','progress'+(new Date()).getTime(),'centerscreen,chrome,resizable',
+                        'chrome://httprequester/content/progress.xul','progress'+(new Date()).getTime(),'centerscreen,chrome,resizable',
                         {
                            url: urlstr,
                            status: "Sending...",
@@ -1069,7 +1069,7 @@ var App = {
   showSetHeaders: function() {
      var currentApp = this;
      window.openDialog(
-         'chrome://poster/content/headers.xul','headers','centerscreen,chrome,resizable',
+         'chrome://httprequester/content/headers.xul','headers','centerscreen,chrome,resizable',
          {
             title: "Request Headers",
             headers: this.getRequestHeadersFromUI()
@@ -1255,8 +1255,8 @@ insertIntoArray: function( transaction, position, transactions, maxcount) {
 		updatedRequest: ""
 	};
  	window.openDialog(
-	      'chrome://poster/content/request-entry.xul',
-		  'poster-request-entry'+(new Date()).getTime(),
+	      'chrome://httprequester/content/request-entry.xul',
+		  'httprequester-request-entry'+(new Date()).getTime(),
 		  "chrome,resizable,modal",
 		  newOptions
 	   );
@@ -1310,8 +1310,8 @@ loadStoredRequest: function() {
 		shouldExecute: false
 	};
  	window.openDialog(
-	      'chrome://poster/content/loadRequest.xul',
-		  'poster-request-entry'+(new Date()).getTime(),
+	      'chrome://httprequester/content/loadRequest.xul',
+		  'httprequester-request-entry'+(new Date()).getTime(),
 		  "chrome,resizable,modal",
 		  newOptions
 	   );
@@ -1348,8 +1348,8 @@ loadStoredRequest: function() {
 		updatedRequest: ""
 	};
  	window.openDialog(
-	      'chrome://poster/content/request-entry.xul',
-		  'poster-request-entry'+(new Date()).getTime(),
+	      'chrome://httprequester/content/request-entry.xul',
+		  'httprequester-request-entry'+(new Date()).getTime(),
 		  "chrome,resizable,modal",
 		  newOptions
 	   );
@@ -1367,8 +1367,8 @@ loadStoredRequest: function() {
 		updatedRequest: ""
 	};
  	window.openDialog(
-	      'chrome://poster/content/request-entry.xul',
-		  'poster-request-entry'+(new Date()).getTime(),
+	      'chrome://httprequester/content/request-entry.xul',
+		  'httprequester-request-entry'+(new Date()).getTime(),
 		  "chrome,resizable,modal",
 		  newOptions
 	   );
@@ -1609,7 +1609,7 @@ executeRawRequest: function( requestStr ) {
   showSetParameters: function() {
      var currentApp = this;
      window.openDialog(
-         'chrome://poster/content/headers.xul','parameters','centerscreen,chrome,resizable',
+         'chrome://httprequester/content/headers.xul','parameters','centerscreen,chrome,resizable',
          {
             title: "Parameters",
             headers: this.getParametersFromUI()

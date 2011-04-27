@@ -1,11 +1,11 @@
-#poster-window {
+#httprequester-window {
    min-width: 450px;
    width: 1024px;
    height: 768px;
    overflow: auto;
 }
 
-#posterSidebar {
+#httprequesterSidebar {
    overflow: scroll;
 }
 

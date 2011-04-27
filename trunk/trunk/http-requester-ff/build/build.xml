@@ -1,8 +1,8 @@
-<project name="poster" default="createWholeXpiForRelease">
+<project name="httprequester" default="createWholeXpiForRelease">
 	<tstamp />
-	<property name="posterReleaseVersion" value="2.0.0.5"/>
+	<property name="httprequesterReleaseVersion" value="1.0"/>
 	<target name="createWholeXpiForRelease" >
-		<zip destfile="../downloads/poster-drp-${posterReleaseVersion}.xpi">
+		<zip destfile="../downloads/httprequester-${httprequesterReleaseVersion}.xpi">
 			<zipfileset dir="../src" includes="install.rdf, install.js,chrome.manifest,chrome/**,defaults/**,components/**,content/**,skin/**,locale/**"/>
 		</zip>
 	</target>

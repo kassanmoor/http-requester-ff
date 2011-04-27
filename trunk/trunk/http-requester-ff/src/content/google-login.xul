@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://poster/skin/default.css" type="text/css"?>
+<?xml-stylesheet href="chrome://httprequester/skin/default.css" type="text/css"?>
 <window id="googleLogin" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
         title="Google Login"
         xmlns:h="http://www.w3.org/1999/xhtml" flex="1" onload="GoogleLogin.init(window.arguments[0])">
-   <script type="application/x-javascript" src="chrome://poster/content/GoogleLogin.js"/>
-   <script type="application/x-javascript" src="chrome://poster/content/HTTP.js"/>
+   <script type="application/x-javascript" src="chrome://httprequester/content/GoogleLogin.js"/>
+   <script type="application/x-javascript" src="chrome://httprequester/content/HTTP.js"/>
    <label id="failure" flex="2" value=""/>
    <grid flex="2">
       <columns>

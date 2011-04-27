@@ -4,14 +4,14 @@
 
   <RDF:Description RDF:about="urn:mozilla:install-manifest">
   
-    <em:id>{d48a39ba-8f80-4fce-8ee1-bc710561c55d}</em:id>
-    <em:name>Poster++</em:name>
-    <em:version>2.0.0.5</em:version>
+    <em:id>{ea4637dc-e014-4c17-9c2c-879322d23268}</em:id>
+    <em:name>HttpRequester</em:name>
+    <em:version>1.0</em:version>
     <em:description>A developer tool for interacting with URLs</em:description>
-    <em:creator>Alex Milowski</em:creator>
-    <em:contributor>Tom Mutdosch</em:contributor>
-    <em:aboutURL>chrome://poster/content/about.xul</em:aboutURL>
-	<em:iconURL>chrome://poster/skin/status-icon.png</em:iconURL>
+    <em:creator>Tom Mutdosch</em:creator>
+    <em:contributor>Alex Milowski</em:contributor>
+    <em:aboutURL>chrome://httprequester/content/about.xul</em:aboutURL>
+	<em:iconURL>chrome://httprequester/skin/httprequester.png</em:iconURL>
 	<em:unpack>true</em:unpack>	
     <!-- firefox -->
     <em:targetApplication>
