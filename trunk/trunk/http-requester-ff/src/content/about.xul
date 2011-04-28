@@ -6,9 +6,9 @@
         xmlns:h="http://www.w3.org/1999/xhtml">
 <description class="header">HttpRequester</description>
 <groupbox>
-   <caption label="Contributor"/>
+   <caption label="Creator"/>
    <description>
-      Tom Mutdosch.  2010,2011.
+      Tom Mutdosch
    </description>
 </groupbox>
 <groupbox>
