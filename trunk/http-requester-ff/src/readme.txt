@@ -45,3 +45,4 @@ extensions.httprequester.header.history
 extensions.httprequester.showAdvancedOptions  - set this to true to cause some of the other buttons to appear  (Google login, Save/Store/Import default URL/content type, timeout slider)
 
 If you have any questions/comments/suggestions, shoot me a note.
+-Tom Mutdosch
