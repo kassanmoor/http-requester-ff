@@ -31,7 +31,7 @@ Paste Request button, and then executing the request.
   # remembers recent URLs, header names, and content types (across sessions)
   # can copy a request/response to clipboard for pasting into bug report, etc
   # The UI has been minimialized and cleaned up a bit
-  # Can hit &lt;esc> key to close window
+  # Can hit ESC key to close window
 
 ==Preferences: via about:config==
   * extensions.httprequester.maxhistory - maximum number of requests to keep
