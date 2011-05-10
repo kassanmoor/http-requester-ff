@@ -8,17 +8,14 @@
   # Default to "http://" if no protocol is entered
 
 ==0.4: (02/03/2011)==
-  # You can now save and load stored requests.
-To save a request, click on a request in the history list and click Save Request. You can optionally give the request a name.
-To load a request, click on Load Request - that will bring up a list of all saved requests. You can select any request to load it into your history to view it, or you can click the Execute button to execute it immediately.
+  # You can now save and load stored requests. To save a request, click on a request in the history list and click Save Request. You can optionally give the request a name.  To load a request, click on Load Request - that will bring up a list of all saved requests. You can select any request to load it into your history to view it, or you can click the Execute button to execute it immediately.
   # Added explicit Delete Request button to remove selected transaction from history list. (You can also hit the Delete key)
 
 ==0.3: (01/19/2011)==
   # History list now shows elapsed time for all requests
   # Double-clicking a row in the history will show you a raw text version of the request and response
   # You can now edit raw requests by clicking the Edit Raw Request button; this is useful for making quick tweaks to a previous request, such as adding or changing a header
-  # Paste Request button. You can now copy existing requests from the clipboard (such as a request captured from Live HTTP Headers) by clicking the
-Paste Request button, and then executing the request.
+  # Paste Request button. You can now copy existing requests from the clipboard (such as a request captured from Live HTTP Headers) by clicking the Paste Request button, and then executing the request.
 
 ==0.2: (08/01/2010)==
   # Reuse HttpRequester window if already open
