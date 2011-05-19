@@ -665,18 +665,23 @@ var App = {
      }
   },
   selectListItem: function() {
-
-       var list = document.getElementById("transaction-list");
-	   var index = list.currentIndex;
-       var item = list.getItemAtIndex(index);
-        var transId = item.getAttribute( "transactionID" );
-		
-		// get transaction for this id
-		for (var i = 0; i < this.transactions.length; i++) {
-			if (this.transactions[i].timeStamp == transId) {
-				// found it
-				this.updateUIForTransaction( this.transactions[i] );
-				break;
+  		var selectedTreeItemIndex = document.getElementById("transaction-list").currentIndex; 
+		if ( selectedTreeItemIndex >= 0 ) {
+			var treeChildren = document.getElementById("transactiontreechildren");
+			if ( treeChildren != null ) {
+				if ( selectedTreeItemIndex >= treeChildren.childNodes.length ) {
+					selectedTreeItemIndex = treeChildren.childNodes.length - 1;
+				} 
+				var selectedTreeItem = treeChildren.childNodes[selectedTreeItemIndex];
+				 var transId = selectedTreeItem.getAttribute( "transactionID" );
+			  	// get transaction for this id
+					for (var i = 0; i < this.transactions.length; i++) {
+						if (this.transactions[i].timeStamp == transId) {
+							// found it
+							this.updateUIForTransaction( this.transactions[i] );
+							break;
+						}
+					}
 			}
 		}
   },
@@ -745,63 +750,70 @@ var App = {
 	
 
   },
-  addTransactionToList: function( transaction ) {
-      var list = document.getElementById("transaction-list");
-	  if (list.getRowCount() >= this.getMaxHistory()) {
-		list.removeChild( list.getItemAtIndex(list.getRowCount()-1));
-	  }
-	try {
+  addTransactionToList: function( transaction ) { 
+  	var item = null;
+   	var treeChildren = document.getElementById("transactiontreechildren");
+	var treeItems = treeChildren.childNodes;
+	if ( treeItems != null && treeItems.length >= this.getMaxHistory() ) { 
+		treeChildren.removeChild(treeItems[treeItems.length-1]);
+	} 
+	
+	try { 
+		
 	  var request = transaction.requestTransaction;
 	  var response = transaction.responseTransaction;
     
-      var len = list.getRowCount();
+      var len = treeItems.length;
       var item = null;
-	  // search based on timestamp
-      if (!item) {
-         item = document.createElementNS(XUL_NS,"listitem");
-		 item.setAttribute( "transactionID", transaction.timeStamp );
-         var nameCell = document.createElementNS(XUL_NS,"listcell");
-         nameCell.setAttribute("label",request.httpMethod + " " + request.url);
-         var valueCell = document.createElementNS(XUL_NS,"listcell");
-		 if (response != null) {
-		 	valueCell.setAttribute("label", response.status + " " + response.statusText);
-		 }
-		 else {
-		 	valueCell.setAttribute("label","");
-		 }
-		 var dateCell = document.createElementNS(XUL_NS,"listcell");
-         dateCell.setAttribute("label",this.getDateString(transaction.timeStamp));
-		 
-		 
-		 // add elapsed time:
-		 var elapsedTimeCell = document.createElementNS(XUL_NS,"listcell");
-		 var elapsedTime = "";
-		 if (transaction.timeStamp != null && response != null &&  response.responseTimeStamp != null) {
-		 	elapsedTime = (response.responseTimeStamp - transaction.timeStamp) + " ms";
-		 }
-         elapsedTimeCell.setAttribute("label",elapsedTime);
-		 
-         item.appendChild(nameCell);
-         item.appendChild(valueCell);
-		 item.appendChild(dateCell);
-		 item.appendChild(elapsedTimeCell);
-         // insert item to the head of the list
-		 if (len > 0) {
-		 	list.insertBefore(item, list.getItemAtIndex(0));
-		 }
-		 else {
-			 list.appendChild(item);
-		 }
-      } else {
-         var cells = item.getElementsByTagName('listcell');
-         var nameCell = cells.item(0);
-         var valueCell = cells.item(1);
-         nameCell.setAttribute("label",name);
-         valueCell.setAttribute("label",value);
-      }
-
-	  
-      } catch (ex) {
+		
+		
+		
+		
+		
+		
+		// adding new item
+	   	if ( !item ) {
+	  	 	item = document.createElement("treeitem");
+	  	 	item.setAttribute( "transactionID", transaction.timeStamp );
+	  	 	var newRow = document.createElement("treerow");
+	  	 	item.appendChild(newRow);
+	  	 	var nameCell = document.createElementNS(XUL_NS,"treecell");
+	         nameCell.setAttribute("label",request.httpMethod + " " + request.url);
+	         var valueCell = document.createElementNS(XUL_NS,"treecell");
+			 if (response != null) {
+			 	valueCell.setAttribute("label", response.status + " " + response.statusText);
+			 }
+			 else {
+			 	valueCell.setAttribute("label","");
+			 }
+			 var dateCell = document.createElementNS(XUL_NS,"treecell");
+	         dateCell.setAttribute("label",this.getDateString(transaction.timeStamp));
+			 
+			 
+			 // add elapsed time:
+			 var elapsedTimeCell = document.createElementNS(XUL_NS,"treecell");
+			 var elapsedTime = "";
+			 if (transaction.timeStamp != null && response != null &&  response.responseTimeStamp != null) {
+			 	elapsedTime = (response.responseTimeStamp - transaction.timeStamp) + " ms";
+			 }
+	         elapsedTimeCell.setAttribute("label",elapsedTime);
+			 
+	         newRow.appendChild(nameCell);
+	         newRow.appendChild(valueCell);
+			 newRow.appendChild(dateCell);
+			 newRow.appendChild(elapsedTimeCell);
+	  	 	
+	  	 	treeChildren.appendChild(item);
+	  	 	 // insert item to the head of the list
+			 if (len > 0) {
+			 	treeChildren.insertBefore(item, treeChildren.firstChild);
+			 }
+			 else {
+				 treeChildren.appendChild(item);
+			 }
+	   	}
+   		
+   	 } catch (ex) {
          alert(ex);
       }
   },
@@ -859,16 +871,20 @@ var App = {
 	return dateStr;
   
   },
-   editTransactionInList: function( transaction ) {
+   editTransactionInList: function( transaction ) { 
 	try {
 	  var request = transaction.requestTransaction;
 	  var response = transaction.responseTransaction;
-      var list = document.getElementById("transaction-list");
-      var len = list.getRowCount();
-      var item = null;
+	  
+	  
+	  	var item = null;
+   	var treeChildren = document.getElementById("transactiontreechildren");
+	var treeitems = treeChildren.childNodes;
+ 	var len = treeitems.length;	
+
  	  // search based on timestamp
       for (var i=0; i<len; i++) {
-         item = list.getItemAtIndex(i);
+         item = treeitems[i];
         var transId = item.getAttribute( "transactionID" );
 		if (transId != null) {
 			if (transId == transaction.timeStamp) {
@@ -881,11 +897,11 @@ var App = {
 		}
       }
       if (!item) {
-		item = list.getItemAtIndex(0);
+		item = item = treeitems[0];
 	  }
 	
 	
-		var cells = item.getElementsByTagName('listcell');
+		var cells = item.getElementsByTagName('treecell');
          var nameCell = cells.item(0);
          var valueCell = cells.item(1);
 		 var dateCell = cells.item(2);
@@ -902,7 +918,14 @@ var App = {
          elapsedTimeCell.setAttribute("label",elapsedTime);
 		 
 		 // now select this guy
-		 list.selectedItem = item;
+		 var treeSelection = document.getElementById("transaction-list").view.selection;	
+		try {
+			treeSelection.select(i);
+		}
+		catch( e ) {
+			alert(ex);
+		}
+		 
       } catch (ex) {
          alert(ex);
       }
@@ -1129,24 +1152,37 @@ insertIntoArray: function( transaction, position, transactions, maxcount) {
 	 var transactionStr = this.getRequestAndResponseString();	  
 	 this.copyText(transactionStr );
   },
+  getSelectedTransactionId: function() { 
+  	var transId = null;
+  	var selectedTreeItemIndex = document.getElementById("transaction-list").currentIndex; 
+	  if ( selectedTreeItemIndex >= 0 ) {
+		var treeChildren = document.getElementById("transactiontreechildren");
+		if ( treeChildren != null ) {
+			if ( selectedTreeItemIndex >= treeChildren.childNodes.length ) {
+				selectedTreeItemIndex = treeChildren.childNodes.length - 1;
+			} 
+			var selectedTreeItem = treeChildren.childNodes[selectedTreeItemIndex];
+	 		 transId = selectedTreeItem.getAttribute( "transactionID" );
+		}
+	  }
+	  return transId;
+  },
    getRequestAndResponseString: function() {
 	// https://developer.mozilla.org/en/Using_the_Clipboard
 	  var transactionStr = "";
 	 var transaction = null;	  
-	   var list = document.getElementById("transaction-list");
-	   var index = list.currentIndex;
-       var item = list.getItemAtIndex(index);
-        var transId = item.getAttribute( "transactionID" );
-		
-		// get transaction for this id
-		for (var i = 0; i < this.transactions.length; i++) {
+	 var transId = this.getSelectedTransactionId();
+	 if ( transId != null ) {
+ 		 for (var i = 0; i < this.transactions.length; i++) {
 			if (this.transactions[i].timeStamp == transId) {
 				// found it
 				transaction =  this.transactions[i];
 				break;
 			}
 		}
+	  }
 	  
+		// get transaction for this id
 	  if (transaction != null) {
 		
 		var request = transaction.requestTransaction;
@@ -1204,19 +1240,18 @@ insertIntoArray: function( transaction, position, transactions, maxcount) {
 	// https://developer.mozilla.org/en/Using_the_Clipboard
 	 var transactionStr = "";
 	 var transaction = null;	  
-	   var list = document.getElementById("transaction-list");
-	   var index = list.currentIndex;
-       var item = list.getItemAtIndex(index);
-        var transId = item.getAttribute( "transactionID" );
-		
-		// get transaction for this id
-		for (var i = 0; i < this.transactions.length; i++) {
+	 // get transaction for this id
+	 var transId = this.getSelectedTransactionId();
+	 if ( transId != null ) {
+ 		 for (var i = 0; i < this.transactions.length; i++) {
 			if (this.transactions[i].timeStamp == transId) {
 				// found it
 				transaction =  this.transactions[i];
 				break;
 			}
 		}
+	  }
+		
 	  
 	  if (transaction != null) {
 		
@@ -1277,34 +1312,32 @@ insertIntoArray: function( transaction, position, transactions, maxcount) {
 
  saveStoredRequest: function() {
  	try {
-		 	var transaction = null;	  
-		   var list = document.getElementById("transaction-list");
-		   var index = list.currentIndex;
-	       var item = list.getItemAtIndex(index);
-	        var transId = item.getAttribute( "transactionID" );
-			
-			// get transaction for this id
-			for (var i = 0; i < this.transactions.length; i++) {
-				if (this.transactions[i].timeStamp == transId) {
-					// found it
-					transaction =  this.transactions[i];
-					var result = window.prompt("Add name for the stored request:\n" + transaction.requestTransaction.url);
-					if ( result != null ) {
-						var history = App.getPreferenceComplex("history.savedRequests");
-						 var storedTransactions =  new Array();
+	 	var transaction = null;	  
+        // get transaction for this id
+		 var transId = this.getSelectedTransactionId();
+		
+		// get transaction for this id
+		for (var i = 0; i < this.transactions.length; i++) {
+			if (this.transactions[i].timeStamp == transId) {
+				// found it
+				transaction =  this.transactions[i];
+				var result = window.prompt("Add name for the stored request:\n" + transaction.requestTransaction.url);
+				if ( result != null ) {
+					var history = App.getPreferenceComplex("history.savedRequests");
+					 var storedTransactions =  new Array();
 
-						  if (history != null && history.length > 0) {
-	  						 storedTransactions = JSON.parse(history);
-						  }
-						 
-						transaction.name = result;
-						this.insertIntoArray( transaction, 0, storedTransactions, 100 );
-						var storedHistoryString = JSON.stringify(storedTransactions);
-						this.setPreferenceComplex( "history.savedRequests", storedHistoryString );
-					}
-					break;
+					  if (history != null && history.length > 0) {
+  						 storedTransactions = JSON.parse(history);
+					  }
+					 
+					transaction.name = result;
+					this.insertIntoArray( transaction, 0, storedTransactions, 100 );
+					var storedHistoryString = JSON.stringify(storedTransactions);
+					this.setPreferenceComplex( "history.savedRequests", storedHistoryString );
 				}
+				break;
 			}
+		}
 		  
       } catch (ex) {
          alert(ex);
@@ -1338,9 +1371,14 @@ loadStoredRequest: function() {
 			this.insertIntoArray( storedTrans, 0, this.transactions, this.getMaxHistory() );
 			this.addTransactionToList(storedTrans);
 			
-			// select new entry in list
-			var list = document.getElementById("transaction-list");
-			list.selectedIndex = 0;
+			 // select new entry in list
+			 var treeSelection = document.getElementById("transaction-list").view.selection;	
+			try {
+				treeSelection.select(0);
+			}
+			catch( e ) {
+				alert(ex);
+			}
 		}
 	}
 },
@@ -1607,10 +1645,12 @@ executeRawRequest: function( requestStr ) {
   this.transactions = new Array();
    
    // clear list
-     var list = document.getElementById("transaction-list");
-	  while (list.getRowCount() > 0 ) {
-		list.removeChild( list.getItemAtIndex(0));
-	  }
+	 var treeChildren = document.getElementById("transactiontreechildren");
+	 if ( treeChildren != null && treeChildren.childNodes.length > 0 ) {
+		 while (treeChildren.hasChildNodes()) {
+			 treeChildren.removeChild(treeChildren.firstChild);
+		}
+	 }
   },
   
   showSetParameters: function() {
@@ -1912,25 +1952,32 @@ selectHeader :function (event) {
 	}, 
 	onDeleteTransaction: function() {
       try {
-			var transaction = null;	  
-		   var list = document.getElementById("transaction-list");
-		   var index = list.currentIndex;
-	       var item = list.getItemAtIndex(index);
-	        var transId = item.getAttribute( "transactionID" );
-			
-			// get transaction for this id
-			for (var i = 0; i < this.transactions.length; i++) {
-				if (this.transactions[i].timeStamp == transId) {
-					// found it
-					transaction =  this.transactions[i];
-					this.removeElement(this.transactions, i);
-					list.removeItemAt(list.getIndexOfItem(item));
-					
-					this.clearRequest();
-					break;
+		var transaction = null;	  
+	        
+		  var selectedTreeItemIndex = document.getElementById("transaction-list").currentIndex; 
+		  if ( selectedTreeItemIndex >= 0 ) {
+			var treeChildren = document.getElementById("transactiontreechildren");
+			if ( treeChildren != null ) {
+				if ( selectedTreeItemIndex >= treeChildren.childNodes.length ) {
+					selectedTreeItemIndex = treeChildren.childNodes.length - 1;
+				} 
+				var selectedTreeItem = treeChildren.childNodes[selectedTreeItemIndex];
+		 		var transId = selectedTreeItem.getAttribute( "transactionID" );
+		 		// get transaction for this id
+				for (var i = 0; i < this.transactions.length; i++) {
+					if (this.transactions[i].timeStamp == transId) {
+						// found it
+						transaction =  this.transactions[i];
+						this.removeElement(this.transactions, i);
+						
+						treeChildren.removeChild(selectedTreeItem);
+						
+						this.clearRequest();
+						break;
+					}
 				}
 			}
-		  
+		  }
       } catch (ex) {
          alert(ex);
       }
