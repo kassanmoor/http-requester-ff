@@ -58,16 +58,15 @@
                   <button label="Store" tooltiptext="Store current values for use later in browser session." oncommand="App.saveValues()"/>
                </hbox>
             </row>
-			
          </rows>
       </grid>
       <hbox class="small-buttons">
 	      <menulist id="method">
 	         <menupopup>
-	            <menuitem label="GET" value="GET"/>
+	            <menuitem label="GET" value="GET" selected="true"/>
 	            <menuitem label="POST" value="POST"/>
 	            <menuitem label="PUT" value="PUT"/>
-	            <menuitem label="DELETE" selected="true" value="DELETE"/>
+	            <menuitem label="DELETE" value="DELETE"/>
 	            <menuitem label="HEAD" value="HEAD"/>
 	            <menuitem label="OPTIONS" value="OPTIONS"/>
 	            <menuitem label="PROFIND" value="PROPFIND"/>
