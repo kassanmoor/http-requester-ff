@@ -719,16 +719,23 @@ var App = {
 //         }
 	
 	// update headers:
-	// remove all headers:
-	var list = document.getElementById("header-list");
-	while (list.getRowCount() > 0 ) {
-		list.removeChild( list.getItemAtIndex(0));
-	}
-	// now add to list
+	 // remove all headers:
+	 var treeChildren = document.getElementById("treechildren");
+	 if ( treeChildren != null && treeChildren.childNodes.length > 0 ) {
+		 while (treeChildren.hasChildNodes()) {
+			 treeChildren.removeChild(treeChildren.firstChild);
+		}
+	 }
 	 for (var name in request.requestHeaders) {
 	 	var value = request.requestHeaders[name];
 	 	this.addRequestHeader(name, value);
 	 }
+	 
+	 
+	 
+	 
+	 
+	 
 	 
 	 // remove parameters
 	list = document.getElementById("parameter-list");
@@ -1685,11 +1692,13 @@ clearRequestView : function() {
 	
 	// update headers:
 	// remove all headers:
-	var list = document.getElementById("header-list");
-	while (list.getRowCount() > 0 ) {
-		//list.removeChild( list.firstChild );
-		list.removeChild( list.getItemAtIndex(0));
-	}
+	 var treeChildren = document.getElementById("treechildren");
+	 if ( treeChildren != null && treeChildren.childNodes.length > 0 ) {
+		 while (treeChildren.hasChildNodes()) {
+			 treeChildren.removeChild(treeChildren.firstChild);
+		}
+	 }
+	
 	 
 	 // remove parameters
 	list = document.getElementById("parameter-list");
@@ -1707,69 +1716,119 @@ clearRequestView : function() {
       //this.requestHeaders[name] = value;
       this.addRequestHeader(name,value);
    },
+   getAllSelectedIndices : function( treechildren, tree) {
+	var treeChildren = document.getElementById(treechildren);
+	var indices = new Array();
+	
+	var start = new Object();
+	var end = new Object();
+	var numRanges =  document.getElementById(tree).view.selection.getRangeCount();
+	
+	for (var t = 0; t < numRanges; t++){
+	  document.getElementById(tree).view.selection.getRangeAt(t,start,end);
+	  for (var v = start.value; v <= end.value; v++){
+	    	indices[indices.length] = v;
+	  }
+	}
+
+	return indices;
+}, 
+selectHeader :function (event) {
+	// when a header is selected in the list, we will update the name/value text fields as well
+	// so they can easily be edited
+	var selectedTreeItemIndex = document.getElementById("header-list").currentIndex; 
+	if ( selectedTreeItemIndex >= 0 ) {
+		var treeChildren = document.getElementById("treechildren");
+		if ( treeChildren != null ) {
+			if ( selectedTreeItemIndex >= treeChildren.childNodes.length ) {
+				selectedTreeItemIndex = treeChildren.childNodes.length - 1;
+			} 
+			var selectedTreeItem = treeChildren.childNodes[selectedTreeItemIndex];
+			if ( selectedTreeItem != null ) {
+				var nameCell = selectedTreeItem.getElementsByTagName('treecell').item(0);
+				var valueCell = selectedTreeItem.getElementsByTagName('treecell').item(1);
+				var headername = nameCell.getAttribute('label');
+				var	headervalue = valueCell.getAttribute('label');
+				
+				document.getElementById("header-name").value = headername;
+    			document.getElementById("header-value").value = headervalue;
+			}
+		}
+	}
+	
+},
    addRequestHeader: function(name,value) {
-      try {
-      var list = document.getElementById("header-list");
-      var len = list.getRowCount();
-      var item = null;
-      for (var i=0; i<len; i++) {
-         item = list.getItemAtIndex(i);
-         var nameCell = item.getElementsByTagName('listcell').item(0);
-         if (nameCell.getAttribute('label')==name) {
-            break;
-         }
-         item = null;
-      }
-      if (!item) {
-         item = document.createElementNS(XUL_NS,"listitem");
-         var nameCell = document.createElementNS(XUL_NS,"listcell");
-         nameCell.setAttribute("label",name);
-         var valueCell = document.createElementNS(XUL_NS,"listcell");
-         valueCell.setAttribute("label",value);
-         item.appendChild(nameCell);
-         item.appendChild(valueCell);
-         list.appendChild(item);
-      } else {
-         var cells = item.getElementsByTagName('listcell');
-         var nameCell = cells.item(0);
-         var valueCell = cells.item(1);
-         nameCell.setAttribute("label",name);
-         valueCell.setAttribute("label",value);
-      }
-      } catch (ex) {
+   	var item = null;
+   	var treeChildren = document.getElementById("treechildren");
+	var treeitems = treeChildren.childNodes;
+	
+	try { 
+		for (var i=0; i < treeitems.length; i++) {
+			item = treeitems[i];
+			var nameCell = item.getElementsByTagName('treecell').item(0);
+	         if (nameCell.getAttribute('label')==name) {
+	            break;
+	         }
+	         item = null;
+		}
+		
+		// adding new item
+	   	if ( !item ) {
+	   		var treeChildren = document.getElementById("treechildren"); 
+	  	 	var newItem = document.createElement("treeitem");
+			var newRow = document.createElement("treerow");
+			var nameLabel = document.createElement("treecell");
+			var valLabel = document.createElement("treecell");
+			newItem.appendChild(newRow);
+			newRow.appendChild(nameLabel);
+			newRow.appendChild(valLabel);
+	   		nameLabel.setAttribute("label", name);
+	   		valLabel.setAttribute("label", value);
+	   		treeChildren.appendChild(newItem);
+	   	}
+	   	else { 
+	   		// updating existing item
+	   		 var cells = item.getElementsByTagName('treecell');
+	         var nameCell = cells.item(0);
+	         var valueCell = cells.item(1);
+	         nameCell.setAttribute("label",name);
+	         valueCell.setAttribute("label",value);
+	   	}
+   		
+   	 } catch (ex) {
          alert(ex);
       }
+   	
    },
    onDeleteHeader: function() {
-      try {
-         var list = document.getElementById("header-list");
-         var item = list.getSelectedItem(0);
-         while (item) {
-            var cells = item.getElementsByTagName('listcell');
-            var nameCell = cells.item(0);
-           // delete this.requestHeaders[nameCell.getAttribute("label")];
-            list.removeItemAt(list.getIndexOfItem(item));
-            item = list.getSelectedItem(0);
-         }
-      } catch (ex) {
-         alert(ex);
-      }
+    var treeChildren = document.getElementById("treechildren");
+	var indices = this.getAllSelectedIndices("treechildren", "header-list" );
+	for ( var i = indices.length-1; i >= 0; i-- ) {
+		var index = indices[i];
+    	var selectedTreeItem = treeChildren.childNodes[index];
+		if (selectedTreeItem != null) {
+			treeChildren.removeChild(selectedTreeItem);
+		}
+	 }
    },
+  
    getRequestHeadersFromUI : function() {
 	  var requestHeadersFromUI = {};
-      try {
-	      var list = document.getElementById("header-list");
-	      var len = list.getRowCount();
-	      var item = null;
-	      for (var i=0; i<len; i++) {
-	         item = list.getItemAtIndex(i);
-			 var cells = item.getElementsByTagName('listcell');
+	  
+	 var item = null;
+     var treeChildren = document.getElementById("treechildren");
+	 var treeitems = treeChildren.childNodes;
+	
+	 try { 
+		for (var i=0; i < treeitems.length; i++) {
+			item = treeitems[i];
+			 var cells = item.getElementsByTagName('treecell');
 	         var nameCell = cells.item(0);
 	         var name = nameCell.getAttribute('label');
 			 var valueCell = cells.item(1);
 	         var value = valueCell.getAttribute('label');
 	         requestHeadersFromUI[name] = value;
-	      }
+		 }
       } catch (ex) {
          alert(ex);
       }
