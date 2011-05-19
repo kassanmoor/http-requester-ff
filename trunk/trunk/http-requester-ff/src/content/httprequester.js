@@ -256,7 +256,7 @@ var App = {
 	 var contentTypehistoryString = JSON.stringify(this.contentTypeHistory);
    	 this.setPreferenceComplex( "contentType.history", contentTypehistoryString );
 	 
-	  var headerHistoryString = JSON.stringify(this.headerNameHistory);
+	 var headerHistoryString = JSON.stringify(this.headerNameHistory);
    	 this.setPreferenceComplex( "header.history", headerHistoryString);
    },
    
