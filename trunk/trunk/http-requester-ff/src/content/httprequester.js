@@ -731,17 +731,17 @@ var App = {
 	 	this.addRequestHeader(name, value);
 	 }
 	 
-	 
-	 
-	 
-	 
-	 
-	 
 	 // remove parameters
-	list = document.getElementById("parameter-list");
-	while (list.getRowCount() > 0 ) {
-		list.removeChild( list.getItemAtIndex(0));
-	}
+	treeChildren = document.getElementById("paramtreechildren");
+	 if ( treeChildren != null && treeChildren.childNodes.length > 0 ) {
+		 while (treeChildren.hasChildNodes()) {
+			 treeChildren.removeChild(treeChildren.firstChild);
+		}
+	 }
+	 for (var name in request.parameters) {
+	 	var value = request.parameters[name];
+	 	this.addParameter(name, value);
+	 }
 	
 
   },
@@ -1698,13 +1698,14 @@ clearRequestView : function() {
 			 treeChildren.removeChild(treeChildren.firstChild);
 		}
 	 }
-	
 	 
 	 // remove parameters
-	list = document.getElementById("parameter-list");
-	while (list.getRowCount() > 0 ) {
-		list.removeChild( list.getItemAtIndex(0));
-	}
+	 treeChildren = document.getElementById("paramtreechildren");
+	 if ( treeChildren != null && treeChildren.childNodes.length > 0 ) {
+		 while (treeChildren.hasChildNodes()) {
+			 treeChildren.removeChild(treeChildren.firstChild);
+		}
+	 }
 
 	},
    onAddChangeHeader: function() {
@@ -1846,53 +1847,64 @@ selectHeader :function (event) {
       this.addParameter(name,value);
    },
    addParameter: function(name,value) {
-      try {
-      var list = document.getElementById("parameter-list");
-      var len = list.getRowCount();
-      var item = null;
-      for (var i=0; i<len; i++) {
-         item = list.getItemAtIndex(i);
-         var nameCell = item.getElementsByTagName('listcell').item(0);
-         if (nameCell.getAttribute('label')==name) {
-            break;
-         }
-         item = null;
-      }
-      if (!item) {
-         item = document.createElementNS(XUL_NS,"listitem");
-         var nameCell = document.createElementNS(XUL_NS,"listcell");
-         nameCell.setAttribute("label",name);
-         var valueCell = document.createElementNS(XUL_NS,"listcell");
-         valueCell.setAttribute("label",value);
-         item.appendChild(nameCell);
-         item.appendChild(valueCell);
-         list.appendChild(item);
-      } else {
-         var cells = item.getElementsByTagName('listcell');
-         var nameCell = cells.item(0);
-         var valueCell = cells.item(1);
-         nameCell.setAttribute("label",name);
-         valueCell.setAttribute("label",value);
-      }
-      } catch (ex) {
+    var item = null;
+   	var treeChildren = document.getElementById("paramtreechildren");
+	var treeitems = treeChildren.childNodes;
+	
+	try { 
+		for (var i=0; i < treeitems.length; i++) {
+			item = treeitems[i];
+			var nameCell = item.getElementsByTagName('treecell').item(0);
+	         if (nameCell.getAttribute('label')==name) {
+	            break;
+	         }
+	         item = null;
+		}
+		
+		// adding new item
+	   	if ( !item ) {
+	   		var treeChildren = document.getElementById("paramtreechildren"); 
+	  	 	var newItem = document.createElement("treeitem");
+			var newRow = document.createElement("treerow");
+			var nameLabel = document.createElement("treecell");
+			var valLabel = document.createElement("treecell");
+			newItem.appendChild(newRow);
+			newRow.appendChild(nameLabel);
+			newRow.appendChild(valLabel);
+	   		nameLabel.setAttribute("label", name);
+	   		valLabel.setAttribute("label", value);
+	   		treeChildren.appendChild(newItem);
+	   	}
+	   	else { 
+	   		// updating existing item
+	   		 var cells = item.getElementsByTagName('treecell');
+	         var nameCell = cells.item(0);
+	         var valueCell = cells.item(1);
+	         nameCell.setAttribute("label",name);
+	         valueCell.setAttribute("label",value);
+	   	}
+   		
+   	 } catch (ex) {
          alert(ex);
       }
    },
    getParametersFromUI : function() {
-	  var parametersFromUI = {};
-      try {
-	      var list = document.getElementById("parameter-list");
-	      var len = list.getRowCount();
-	      var item = null;
-	      for (var i=0; i<len; i++) {
-	         item = list.getItemAtIndex(i);
-			 var cells = item.getElementsByTagName('listcell');
+	 var parametersFromUI = {};
+	  
+	 var item = null;
+     var treeChildren = document.getElementById("paramtreechildren");
+	 var treeitems = treeChildren.childNodes;
+	
+	 try { 
+		for (var i=0; i < treeitems.length; i++) {
+			item = treeitems[i];
+			 var cells = item.getElementsByTagName('treecell');
 	         var nameCell = cells.item(0);
 	         var name = nameCell.getAttribute('label');
 			 var valueCell = cells.item(1);
 	         var value = valueCell.getAttribute('label');
 	         parametersFromUI[name] = value;
-	      }
+		 }
       } catch (ex) {
          alert(ex);
       }
@@ -1924,25 +1936,15 @@ selectHeader :function (event) {
       }
    },
    onDeleteParameter: function() {
-      try {
-         var list = document.getElementById("parameter-list");
-         var item = list.getSelectedItem(0);
-         while (item) {
-            var cells = item.getElementsByTagName('listcell');
-            var nameCell = cells.item(0);
-            //delete this.parameters[nameCell.getAttribute("label")];
-            list.removeItemAt(list.getIndexOfItem(item));
-            item = list.getSelectedItem(0);
-         }
-      } catch (ex) {
-         alert(ex);
-      }
-	  
-	  
-	  
-	 
-
-
+	var treeChildren = document.getElementById("paramtreechildren");
+	var indices = this.getAllSelectedIndices("paramtreechildren", "parameter-list" );
+	for ( var i = indices.length-1; i >= 0; i-- ) {
+		var index = indices[i];
+    	var selectedTreeItem = treeChildren.childNodes[index];
+		if (selectedTreeItem != null) {
+			treeChildren.removeChild(selectedTreeItem);
+		}
+	 }
    }
 }
 
