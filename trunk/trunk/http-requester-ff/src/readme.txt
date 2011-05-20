@@ -1,7 +1,16 @@
 HttpRequester is a modified version of the excellent Poster add-on available for Mozilla Firefox.  
 HttpRequester is distributed under the the BSD License: http://www.opensource.org/licenses/bsd-license.php
- 
-1.0 (03/07/2011): 
+1.0.1: (05/20/2011):
+1) Added a "View raw transaction" link in the Response area to quickly let you view the entire raw request and response.  
+This is the same behavior as double-clicking a transaction in the transaction history list.
+
+1.0: (05/19/2011):
+1) The transaction list control has been updated; each column is now resizable and re-orderable and can be hidden via the column picker.  
+The ordering and width of each column are now persisted.  Additionally, if a value is too large for a column it will be truncated
+and a tooltip will display the full value.
+2) The headers and parameters list controls have been similarly updated.
+
+0.5: (03/07/2011): 
 1) Updated to work with Firefox 4  
 2) Default to "http://" if no protocol is entered
 

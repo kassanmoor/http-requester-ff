@@ -21,8 +21,6 @@
    	  <groupbox flex="2">
       <caption label="Request"/>
    	<vbox flex="3">
-      <description flex="3" hidden="true">Select a file or enter content to POST or PUT to a URL and then specify the mime type you'd like or just
-      use the GET, HEAD, or DELETE methods on a URL.</description>
       <grid>
          <columns>
             <column/>
@@ -172,6 +170,8 @@
 	      <hbox>
 	         <label value="Status:"/>
 	         <label id="code" value=""/>
+	         <spacer flex="1"/>
+	         <label align="end"  class="small-margin, text-link" value="View raw transaction" onclick="App.viewRawRequest();" crop="end"/>
 	      </hbox>
 	      <textbox id="response-content" multiline="true" flex="3"/>
 	      <vbox>
@@ -184,9 +184,6 @@
 	            <rows id="headers"/>
 	         </grid>
 	      </vbox>
-		  <!--
-	      <button label="Close" oncommand="window.close();"/>
-		  -->
 	   </vbox>
    </groupbox>
   
@@ -216,10 +213,10 @@
 		      <button label="Clear history" tooltiptext="Clear entire history of requests" oncommand="App.clearHistory();"/>
 		      <button label="Copy to clipboard" tooltiptext="Copy request/response transaction to clipboard" oncommand="App.copyToClipBoard();"/>
 			  <button label="Delete request" tooltiptext="Delete selected transaction from list" oncommand="App.onDeleteTransaction();"/>
-			  <button label="Edit raw request" tooltiptext="Edit raw request" oncommand="App.editRawRequest();"/>
+			  <button label="Edit raw request..." tooltiptext="Edit raw request" oncommand="App.editRawRequest();"/>
 			  <separator />
-			  <button label="Save request" tooltiptext="Store selected request" oncommand="App.saveStoredRequest();"/>
-			  <button label="Load request" tooltiptext="Load stored request" oncommand="App.loadStoredRequest();"/>
+			  <button label="Save request..." tooltiptext="Store selected request" oncommand="App.saveStoredRequest();"/>
+			  <button label="Load request..." tooltiptext="Load stored request" oncommand="App.loadStoredRequest();"/>
 			</vbox> 
 		</hbox>
    </groupbox>
