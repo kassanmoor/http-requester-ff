@@ -3,6 +3,7 @@ HttpRequester is distributed under the the BSD License: http://www.opensource.or
 1.0.1: (05/20/2011):
 1) Added a "View raw transaction" link in the Response area to quickly let you view the entire raw request and response.  
 This is the same behavior as double-clicking a transaction in the transaction history list.
+2) Cleaned up Content area (made selecting a File to upload a radio button control)
 
 1.0: (05/19/2011):
 1) The transaction list control has been updated; each column is now resizable and re-orderable and can be hidden via the column picker.  

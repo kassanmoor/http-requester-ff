@@ -90,7 +90,6 @@
             <tab label="Parameters"/>
          </tabs>
          <tabpanels flex="2">
-
            <vbox flex="1">
              <grid>
                <columns>
@@ -98,13 +97,6 @@
                   <column flex="1"/>
                </columns>
                <rows>
-                  <row>
-                      <label value="File:"/>
-                      <hbox>
-                         <textbox id="filename" flex="2"/>
-                         <button id="browse-file" label="Browse..." tooltiptext="Browse for file." oncommand="App.browseForFile()"/>
-                      </hbox>
-                  </row>
                   <row>
                      <label value="Content Type:"/>
                      <hbox>
@@ -120,7 +112,18 @@
                   </row>
                  </rows>
              </grid>
-             <textbox id="content" multiline="true" flex="2"/>
+             
+             <radiogroup id="contentBodyGroup" onselect="App.contentBodyRadioButtonChanged()">
+				<row align="center">
+					<radio group="position" label="Content" value="0"  />
+					<radio group="position" label="File" value="1" />
+                    <hbox flex="2">
+                       <textbox id="filename" flex="2"/>
+                       <button id="browse-file" label="Browse..." tooltiptext="Browse for file." oncommand="App.browseForFile()"/>
+                    </hbox>
+				</row>
+			</radiogroup>
+            <textbox id="content" multiline="true" flex="2"/>
            </vbox>
            <vbox flex="1">
             <hbox align="center">
@@ -163,7 +166,7 @@
    </groupbox>
    
     <!-- response area -->
-	<groupbox flex="100">
+	<groupbox flex="100" >
       	<caption label="Response"/>
 		<vbox  style="overflow: auto" flex="100">
 	      <description id="title"/>
