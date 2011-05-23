@@ -10,6 +10,7 @@ This is the same behavior as double-clicking a transaction in the transaction hi
 The ordering and width of each column are now persisted.  Additionally, if a value is too large for a column it will be truncated
 and a tooltip will display the full value.
 2) The headers and parameters list controls have been similarly updated.
+3) The response content now properly shows with a scrollbar if there are lots of response headers
 
 0.5: (03/07/2011): 
 1) Updated to work with Firefox 4  

@@ -176,7 +176,9 @@
 	         <spacer flex="1"/>
 	         <label align="end"  class="small-margin, text-link" value="View raw transaction" onclick="App.viewRawRequest();" crop="end"/>
 	      </hbox>
-	      <textbox id="response-content" multiline="true" flex="3"/>
+	      <vbox minheight="100px" flex="3">
+	      	<textbox id="response-content" multiline="true" flex="3"/>
+	      </vbox>
 	      <vbox>
 	         <label value="Headers:"/>
 	         <grid flex="1">
