@@ -244,6 +244,9 @@ var App = {
 			this.headerNameHistory = new Array();
 		}
 		this.updateMenuList( "header-name", this.headerNameHistory );
+		
+		// set appropriate content UI controls based on radio button
+		contentBodyRadioButtonChanged();
 	  
    },
    saveSettings: function() { 
@@ -1383,7 +1386,22 @@ loadStoredRequest: function() {
 	}
 },
 
-
+contentBodyRadioButtonChanged: function() {
+    var group = document.getElementById("contentBodyGroup");    
+    
+    if ( group.selectedIndex == 0 ) {
+    	document.getElementById("filename").setAttribute("disabled", "true");
+    	document.getElementById("browse-file").setAttribute("disabled", "true");
+    	
+    	document.getElementById("content").removeAttribute("disabled" );
+    }
+    else {
+    	document.getElementById("filename").removeAttribute("disabled" );
+    	document.getElementById("browse-file").removeAttribute("disabled" );
+    	
+    	document.getElementById("content").setAttribute("disabled", "true");
+    }
+},
 
   viewRawRequest: function() {
 	var transaction = this.getRequestAndResponseString();	  
