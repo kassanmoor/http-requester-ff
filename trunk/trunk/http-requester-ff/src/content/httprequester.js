@@ -236,7 +236,7 @@ var App = {
 		this.updateMenuList( "ctype", this.contentTypeHistory );
 		
 		// load headers
-	  var headerHistory = this.getPreferenceComplex("header.history");
+	   var headerHistory = this.getPreferenceComplex("header.history");
 	   if (headerHistory != null && headerHistory.length > 0) {
 	  	 this.headerNameHistory = JSON.parse(headerHistory);
 		}
@@ -246,7 +246,7 @@ var App = {
 		this.updateMenuList( "header-name", this.headerNameHistory );
 		
 		// set appropriate content UI controls based on radio button
-		contentBodyRadioButtonChanged();
+		this.contentBodyRadioButtonChanged();
 	  
    },
    saveSettings: function() { 
@@ -823,6 +823,14 @@ var App = {
 			 else {
 				 treeChildren.appendChild(item);
 			 }
+			 
+		 	// make sure that newly selected row is shown in scroll pane
+		  	var tree = document.getElementById("transaction-list");			
+			var boxobject = tree.boxObject;
+			boxobject.QueryInterface(Components.interfaces.nsITreeBoxObject);
+			// make sure it shows up at the top if possible
+			boxobject.scrollToRow(0);
+			 
 	   	}
    		
    	 } catch (ex) {
@@ -950,6 +958,13 @@ var App = {
 		 var treeSelection = document.getElementById("transaction-list").view.selection;	
 		try {
 			treeSelection.select(i);
+		
+			// make sure that newly selected row is shown in scroll pane
+		  	var tree = document.getElementById("transaction-list");			
+			var boxobject = tree.boxObject;
+			boxobject.QueryInterface(Components.interfaces.nsITreeBoxObject);
+			// make sure it shows up at the top if possible
+			boxobject.scrollToRow(i);
 		}
 		catch( e ) {
 			alert(ex);
@@ -1401,7 +1416,7 @@ loadStoredRequest: function() {
 			this.addTransactionToList(storedTrans);
 			
 			 // select new entry in list
-			 var treeSelection = document.getElementById("transaction-list").view.selection;	
+			var treeSelection = document.getElementById("transaction-list").view.selection;	
 			try {
 				treeSelection.select(0);
 			}
