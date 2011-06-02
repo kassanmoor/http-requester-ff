@@ -1,5 +1,10 @@
 HttpRequester is a modified version of the excellent Poster add-on available for Mozilla Firefox.  
 HttpRequester is distributed under the the BSD License: http://www.opensource.org/licenses/bsd-license.php
+
+1.0.2: (06/02/2011):
+1) Added a column in the transaction history to show Content Length.  The value used is the Content-Length response header 
+if available, and the size of the response body otherwise
+
 1.0.1: (05/20/2011):
 1) Added a "View raw transaction" link in the Response area to quickly let you view the entire raw request and response.  
 This is the same behavior as double-clicking a transaction in the transaction history list.

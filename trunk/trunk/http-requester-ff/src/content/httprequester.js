@@ -762,18 +762,12 @@ var App = {
 	} 
 	
 	try { 
-		
 	  var request = transaction.requestTransaction;
 	  var response = transaction.responseTransaction;
     
       var len = treeItems.length;
       var item = null;
-		
-		
-		
-		
-		
-		
+
 		// adding new item
 	   	if ( !item ) {
 	  	 	item = document.createElement("treeitem");
@@ -792,6 +786,20 @@ var App = {
 			 var dateCell = document.createElementNS(XUL_NS,"treecell");
 	         dateCell.setAttribute("label",this.getDateString(transaction.timeStamp));
 			 
+			 // add Content length time:
+			 var contentLengthCell = document.createElementNS(XUL_NS,"treecell");
+			 var contentLength = 0;;
+			 if (response != null && response.content != null ) { 
+			 	// use Content-Length header if it was supplied by response
+			 	if ( response.responseHeaders != null && response.responseHeaders["Content-Length"] != null  ) {
+			 		contentLength = response.responseHeaders["Content-Length"].trim();
+			 	} 
+			 	else { 
+			 		// otherwise use the length of the response body
+			 		contentLength = response.content.length;
+			 	}
+			 }
+	         contentLengthCell.setAttribute("label",contentLength);
 			 
 			 // add elapsed time:
 			 var elapsedTimeCell = document.createElementNS(XUL_NS,"treecell");
@@ -800,10 +808,11 @@ var App = {
 			 	elapsedTime = (response.responseTimeStamp - transaction.timeStamp) + " ms";
 			 }
 	         elapsedTimeCell.setAttribute("label",elapsedTime);
-			 
+	         
 	         newRow.appendChild(nameCell);
 	         newRow.appendChild(valueCell);
 			 newRow.appendChild(dateCell);
+			 newRow.appendChild(contentLengthCell);
 			 newRow.appendChild(elapsedTimeCell);
 	  	 	
 	  	 	treeChildren.appendChild(item);
@@ -904,21 +913,38 @@ var App = {
 	  }
 	
 	
-		var cells = item.getElementsByTagName('treecell');
+		 var cells = item.getElementsByTagName('treecell');
          var nameCell = cells.item(0);
          var valueCell = cells.item(1);
 		 var dateCell = cells.item(2);
-		 var elapsedTimeCell = cells.item(3);
+		 var contentLengthCell = cells.item(3);
+		 var elapsedTimeCell = cells.item(4);
+		 
          nameCell.setAttribute("label",request.httpMethod + " " + request.url);
          valueCell.setAttribute("label",response.status + " " + response.statusText);
 		 dateCell.setAttribute("label",this.getDateString(transaction.timeStamp));
 		 
-		  // add elapsed time:
+         // add Content length time:
+		 var contentLength = 0;;
+		 if (response != null && response.content != null ) { 
+		 	// use Content-Length header if it was supplied by response
+		 	if ( response.responseHeaders != null && response.responseHeaders["Content-Length"] != null  ) {
+		 		contentLength = response.responseHeaders["Content-Length"].trim();
+		 	} 
+		 	else { 
+		 		// otherwise use the length of the response body
+		 		contentLength = response.content.length;
+		 	}
+		 }
+         contentLengthCell.setAttribute("label",contentLength);
+         
+          // add elapsed time:
 		 var elapsedTime = "";
 		 if (transaction.timeStamp != null && transaction.responseTransaction != null &&  transaction.responseTransaction.responseTimeStamp != null) {
 		 	elapsedTime = (response.responseTimeStamp - transaction.timeStamp) + " ms";
 		 }
          elapsedTimeCell.setAttribute("label",elapsedTime);
+         
 		 
 		 // now select this guy
 		 var treeSelection = document.getElementById("transaction-list").view.selection;	
