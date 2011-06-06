@@ -11,6 +11,8 @@
    <script type="application/x-javascript" src="chrome://httprequester/content/request-entry.js"/>
    	<keyset id="httprequesterKeys">
 		<key keycode="VK_ESCAPE" oncommand="window.close();"/>
+		<key id="key_find" key="f" oncommand="RequestEntry.findInTextBox();" modifiers="accel" />
+		<key id="key_find_next" key="g" oncommand="RequestEntry.doFindNext();" modifiers="accel"/>
 	</keyset>
 	
    <vbox flex="3">
@@ -18,6 +20,7 @@
 	 <textbox id="content" multiline="true" flex="2"/>
 	 <spacer/>
       <hbox class="small-buttons">
+       	  <button label="Find..." key="key_find" tooltiptext="Find text" oncommand="RequestEntry.findInTextBox();"/>
 	      <button label="Paste from clipboard" tooltiptext="Paste Request" oncommand="RequestEntry.pasteFromClipboard();"/>
 		  <spacer flex="5"/>
 	      <button label="Cancel"  oncommand="window.close();"/>
