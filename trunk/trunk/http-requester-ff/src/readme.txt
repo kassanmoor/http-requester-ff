@@ -1,9 +1,10 @@
 HttpRequester is a modified version of the excellent Poster add-on available for Mozilla Firefox.  
 HttpRequester is distributed under the the BSD License: http://www.opensource.org/licenses/bsd-license.php
+
 1.0.3: (06/05/2011):
-1) Added a "Find..." function in the Raw Transaction view window.  Press the Find button or hit CTRL-f to search for text 
-anywhere in the request/response.  CTRL-g will do a Find Next to locate the next instance of the text that was last
-searched for.
+1) Added a "Find..." function in the Content Response area and in the Raw Transaction view window.  Press the Find 
+button or hit CTRL-f to search for text anywhere in the request/response.  CTRL-g will do a Find Next to locate the 
+next instance of the text that was last searched for.
 
 1.0.2: (06/02/2011):
 1) Added a column in the transaction history to show Content Length.  The value used is the Content-Length response header 
