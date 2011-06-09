@@ -14,6 +14,8 @@
    
    	<keyset id="httprequesterKeys">
 		<key keycode="VK_ESCAPE" oncommand="window.close();"/>
+		<key id="key_find" key="f" oncommand="App.findInTextBox();" modifiers="accel" />
+		<key id="key_find_next" key="g" oncommand="App.doFindNext();" modifiers="accel"/>
 	</keyset>
 	
    <vbox flex="3">

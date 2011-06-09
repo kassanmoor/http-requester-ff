@@ -133,6 +133,53 @@ var App = {
 	}
 	return max;   
    },
+   	findInTextBox : function() { 
+   		// if the response-content is focused, we will perform a Find for the response content
+   		if ( document.getElementById("response-content").getAttribute("focused") ) { 
+			var nsIPromptService = Components.interfaces.nsIPromptService;
+			var nsPrompt_CONTRACTID = "@mozilla.org/embedcomp/prompt-service;1";
+			var gPromptService = Components.classes[nsPrompt_CONTRACTID].getService(nsIPromptService);
+			var result = { value: this.lastSearchString };
+			var dummy = { value: 0 };
+		
+			if (gPromptService.prompt(window,
+	                            "Find text in response",
+	                            "Enter text to search for:",
+	                            result,
+	                            null,
+	                            dummy)) {
+	        	this.lastSearchString = result.value;   
+	        	
+	        	this.doFindNext();
+			}  
+   		}
+	},
+	doFindNext : function() {
+		// if the response-content is focused, we will perform a Find for the response content
+   		if ( document.getElementById("response-content").getAttribute("focused") ) { 
+			var text = document.getElementById("response-content").value;
+	        	
+	    	var start = document.getElementById("response-content").selectionStart;
+	    	
+	    	if ( start < text.length - 1 ) {
+	    		start = start + 1;
+	    	}
+	    	var index = text.toUpperCase().indexOf( this.lastSearchString.toUpperCase(), start );
+	    	if ( index == -1 ) { 
+	    		// restart; look from the beginning 
+	    		index = text.toUpperCase().indexOf( this.lastSearchString.toUpperCase() );
+	    	}
+	    	if ( index == -1 ) { 
+	    		alert( "No match found.");
+	    	}
+	    	else { 
+	    		document.getElementById("response-content").select();
+				document.getElementById("response-content").setSelectionRange(index, (index + this.lastSearchString.length));
+	    	}
+   		}
+		
+	},
+   
    init: function() {
 	// show advanced section if preference is set
 	if ( this.getPreferenceBool( "showAdvancedOptions" ) ) { 
