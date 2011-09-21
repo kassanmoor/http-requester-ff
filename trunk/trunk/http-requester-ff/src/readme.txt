@@ -1,5 +1,8 @@
 HttpRequester is a modified version of the excellent Poster add-on available for Mozilla Firefox.  
 HttpRequester is distributed under the the BSD License: http://www.opensource.org/licenses/bsd-license.php
+1.0.3.1: (09/20/2011):
+1) Fixed: Parameters added to the parameter list were only being added to the request URI for GET requests, and not for POST/PUT/DELETE.
+2) Fixed: Parameters added to the request URI were not added correctly if the URI already had existing URI query.
 
 1.0.3: (06/05/2011):
 1) Added a "Find..." function in the Content Response area and in the Raw Transaction view window.  Press the Find 
