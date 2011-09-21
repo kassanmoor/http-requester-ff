@@ -465,6 +465,9 @@ var App = {
          this.elements["contentType"].value = "text/xml";
          ctype = "text/xml";
       }
+      
+      urlstr = this.addParametersToURI(urlstr);
+      
       if (urlstr.length==0) {
          alert("A URL must be specified.");
          /*
@@ -490,7 +493,22 @@ var App = {
       	 if ( urlstr.indexOf( "://") == -1 ) { 
       	 	urlstr = "http://" + urlstr;
       	 }
-         var needSeparator = false;
+      	 
+      	 urlstr = this.addParametersToURI(urlstr);
+
+         this.synopsis = method+" on "+urlstr;
+         this.getContentFromURL(urlstr,method);
+      }
+   },
+   
+   pathToFile: function(path) {
+      var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+      file.initWithPath(path);
+      return file;
+   },
+   
+   addParametersToURI : function(urlstr) { 
+   	     var needSeparator = false;
 		 var parameters = this.getParametersFromUI();
          for (var name in parameters) {
             if (needSeparator) {
@@ -498,6 +516,9 @@ var App = {
             } else {
                if (urlstr.indexOf('?')<0) {
                   urlstr += "?";
+               }
+               else {
+               		urlstr += "&";
                }
             }
 			var val = encodeURIComponent(parameters[name]);
@@ -509,15 +530,7 @@ var App = {
 			}
             needSeparator = true;
          }
-         this.synopsis = method+" on "+urlstr;
-         this.getContentFromURL(urlstr,method);
-      }
-   },
-   
-   pathToFile: function(path) {
-      var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-      file.initWithPath(path);
-      return file;
+         return urlstr;
    },
    
    onResult: function(status,xml,text,headers,statusText, id) {
@@ -2034,7 +2047,7 @@ selectHeader :function (event) {
          alert(ex);
       }
    },
-   getParametersFromUI : function() {
+   getParametersFromUI : function() { 
 	 var parametersFromUI = {};
 	  
 	 var item = null;
