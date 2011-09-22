@@ -1323,6 +1323,7 @@ insertIntoArray: function( transaction, position, transactions, maxcount) {
 		
 		if (response != null) {
 			//transactionStr += "<--- RESPONSE:" + "\r\n";
+			transactionStr += " -- response --" + "\r\n";
 			transactionStr += response.status + " " + response.statusText + "\r\n";
 			//transactionStr += "Response Headers:" + "\r\n";
 			
@@ -1602,6 +1603,13 @@ executeRawRequest: function( requestStr ) {
 	this.clearRequestView();
 	Response.clearResponseview();
 	if (text != null) {
+		
+		// if the request string actually contains the response as well
+		var responseStartIndex = text.lastIndexOf( "\n\n -- response --" );
+		if ( responseStartIndex != -1 ) { 
+			text = text.substring(0, responseStartIndex);
+		}
+		
 		var uri = null;
 		var textLines = this.splitOnAllNewlines(text);
 		var index = 0;
