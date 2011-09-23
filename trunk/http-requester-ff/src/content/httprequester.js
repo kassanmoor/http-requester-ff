@@ -374,12 +374,6 @@ var App = {
       this.servive = data.service;
    },
    
-   showEncoder: function() {
-      var currentApp = this;
-      window.openDialog(
-         'chrome://httprequester/content/encoder.xul','encoder','centerscreen,chrome,resizable'
-      );
-   },
    
    doMethodRequest: function() {
       var method = document.getElementById("method").value;
@@ -402,20 +396,6 @@ var App = {
       } else if (method=="MOVE") {
          this.moveURL();
       }
-   },
-   
-   doContent: function() {
-      var value = document.getElementById("content-options").value;
-      if (value=="headers") {
-         this.showSetHeaders();
-      } else if (value=="parameters") {
-         this.showSetParameters();
-      } else if (value=="parameter-body") {
-         this.makeParameterPost();
-      } else if (value=="encode") {
-         this.showEncoder();
-      }
-      
    },
    
    postURL: function() {
@@ -541,16 +521,6 @@ var App = {
          this.progressDialog = null;
       }
       var title = this.synopsis;
-//      var resultWindow = window.openDialog(
-//         'chrome://httprequester/content/response.xul','response'+(new Date()).getTime(),'centerscreen,chrome,resizable',
-//         {
-//            title: title,
-//            status: status,
-//            statusText: statusText,
-//            content: text,
-//            headers: headers
-//         }
-//      );
 	var response = new this.ResponseTransaction();
 	response.title = title;
 	response.status = status;
@@ -1200,16 +1170,7 @@ var App = {
         alert("Cannot process request due to: "+error.message);
      }
   },
-  showSetHeaders: function() {
-     var currentApp = this;
-     window.openDialog(
-         'chrome://httprequester/content/headers.xul','headers','centerscreen,chrome,resizable',
-         {
-            title: "Request Headers",
-            headers: this.getRequestHeadersFromUI()
-         }
-     );
-  },
+
   // from the array: transactions	
 removeElement: function(transactions, index) {
 
@@ -1779,21 +1740,21 @@ executeRawRequest: function( requestStr ) {
 		}
 	 }
   },
-  
-  showSetParameters: function() {
-     var currentApp = this;
-     window.openDialog(
-         'chrome://httprequester/content/headers.xul','parameters','centerscreen,chrome,resizable',
-         {
-            title: "Parameters",
-            headers: this.getParametersFromUI()
-         }
-     );
-  },
+
   makeParameterPost: function() {
      this.elements["contentType"].value = "application/x-www-form-urlencoded";
      var body = "";
 	 var parameters = this.getParametersFromUI();
+	 
+	 // now remove the parameters from the UI; don't want them to get added to the 
+	 // request URI on submit
+	 var treeChildren = document.getElementById("paramtreechildren");
+	 if ( treeChildren != null && treeChildren.childNodes.length > 0 ) {
+		 while (treeChildren.hasChildNodes()) {
+			 treeChildren.removeChild(treeChildren.firstChild);
+		}
+	 }
+	 
      for (var name in parameters) {
         if (body.length>0) {
            body += "&";
@@ -1808,6 +1769,10 @@ executeRawRequest: function( requestStr ) {
 		}
      }
      this.elements["content"].value = body;
+     
+     
+     
+     
   },
   clearRequest : function() {
 	this.clearRequestView();
@@ -2077,6 +2042,7 @@ selectHeader :function (event) {
       }
 	  return parametersFromUI;
 	}, 
+	
 	onDeleteTransaction: function() {
       try {
 		var transaction = null;	  

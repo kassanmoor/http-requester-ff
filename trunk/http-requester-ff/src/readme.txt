@@ -3,8 +3,9 @@ HttpRequester is distributed under the the BSD License: http://www.opensource.or
 1.0.3.1: (09/20/2011):
 1) Fixed: Parameters added to the parameter list were only being added to the request URI for GET requests, and not for POST/PUT/DELETE.
 2) Fixed: Parameters added to the request URI were not added correctly if the URI already had existing URI query.
-3) When viewing raw request, response is now separated with a "-- response --" delimiter to aid in readability.
-4) Fixed: when executing raw request, was including the response content as part of the PUT/POST body 
+3) Fixed: When clicking Parameter Body to move add parameters to the body content, the parameters were still being added to the URI as well.
+4) When viewing raw request, response is now separated with a "-- response --" delimiter to aid in readability.
+5) Fixed: when executing raw request, was including the response content as part of the PUT/POST body 
 
 1.0.3: (06/05/2011):
 1) Added a "Find..." function in the Content Response area and in the Raw Transaction view window.  Press the Find 
