@@ -18,15 +18,8 @@
     <em:targetApplication>
        <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                     em:minVersion="3.0"
-                    em:maxVersion="6.*" />
+                    em:maxVersion="8.*" />
     </em:targetApplication>
-    <!-- flock -->
-    <em:targetApplication>
-       <RDF:Description em:id="{a463f10c-3994-11da-9945-000d60ca027b}"
-                     em:minVersion="0.1"
-                     em:maxVersion="1.0" />
-    </em:targetApplication>
-
   </RDF:Description>
 
 </RDF:RDF>
