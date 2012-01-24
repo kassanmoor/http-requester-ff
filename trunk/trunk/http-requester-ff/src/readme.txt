@@ -1,5 +1,17 @@
 HttpRequester is a modified version of the excellent Poster add-on available for Mozilla Firefox.  
 HttpRequester is distributed under the the BSD License: http://www.opensource.org/licenses/bsd-license.php
+1.0.4: (01/23/2012):
+1) Via user request: added ability to add custom methods to the list of 
+available HTTP methods.  Useful for adding things like PATCH (now an Proposed Standard -- RFC 5789).
+To add new Methods: enter "about:config" in your URL bar.  Then filter on:
+extensions.httprequester.http.methods.custom.write
+Double-click the value to modify it.  You can change it to a list of comma-separated values like:
+["PROPFIND", "PATCH"] 
+You can also add read-only custom methods too (these methods will not send any entity body) via extensions.httprequester.http.methods.custom.read
+
+When you bring up HTTP Requester it will show those values in the HTTP method dropdown for use.
+
+
 1.0.3.1: (09/20/2011):
 1) Fixed: Parameters added to the parameter list were only being added to the request URI for GET requests, and not for POST/PUT/DELETE.
 2) Fixed: Parameters added to the request URI were not added correctly if the URI already had existing URI query.

@@ -11,6 +11,8 @@ var App = {
    urlHistory : {},
    contentTypeHistory : {},
    headerNameHistory : {},
+   customReadHttpMethods: {},
+   customWriteHttpMethdods: {},
     
     Transaction : function(){
 		this.timeStamp = null;
@@ -294,7 +296,37 @@ var App = {
 		
 		// set appropriate content UI controls based on radio button
 		this.contentBodyRadioButtonChanged();
-	  
+		
+		// load custom methods
+  		var sendCommands = this.getPreferenceString("http.methods.custom.write");
+	    if (sendCommands != null && sendCommands.length > 0) {
+	  	 	this.customWriteHttpMethods = JSON.parse(sendCommands);
+		}
+		else {
+			this.customWriteHttpMethods = new Array();
+		}
+  		var readCommands = this.getPreferenceString("http.methods.custom.read");
+	    if (readCommands != null && readCommands.length > 0) {
+	  	 	this.customReadHttpMethods = JSON.parse(readCommands);
+		}
+		else {
+			this.customReadHttpMethods = new Array();
+		}
+		
+		// populate METHOD dropdown with custom methods
+		var methodList = document.getElementById("method");
+		for (var i = 0; i < this.customWriteHttpMethods.length; i++) {
+			var newMethod = document.createElement("menuitem");
+			newMethod.setAttribute("label", this.customWriteHttpMethods[i]);
+			newMethod.setAttribute("value", this.customWriteHttpMethods[i]);
+			methodList.firstChild.appendChild(newMethod);
+		}
+		for (var i = 0; i < this.customReadHttpMethods.length; i++) {
+			var newMethod = document.createElement("menuitem");
+			newMethod.setAttribute("label", this.customReadHttpMethods[i]);
+			newMethod.setAttribute("value", this.customReadHttpMethods[i]);
+			methodList.firstChild.appendChild(newMethod);
+		}
    },
    saveSettings: function() { 
   	 var historyString = JSON.stringify(this.transactions);
@@ -389,12 +421,21 @@ var App = {
          this.headURL();
       } else if (method=="OPTIONS") {
          this.optionsURL();
-      } else if (method=="PROPFIND") {
-         this.propfindURL();
-      } else if (method=="COPY") {
-         this.copyURL();
-      } else if (method=="MOVE") {
-         this.moveURL();
+      }
+      else {
+      	// custom methods
+      	for (var i = 0; i < this.customWriteHttpMethods.length; i++) {
+			if (method == this.customWriteHttpMethods[i]) {
+				this.sendCustomCommand(method)
+				break;
+			}
+		}
+		for (var i = 0; i < this.customReadHttpMethods.length; i++) {
+			if (method == this.customReadHttpMethods[i]) {
+				this.getCustomCommand(method)
+				break;
+			}
+		}
       }
    },
    
@@ -426,14 +467,11 @@ var App = {
    optionsURL: function() {
       this.handleGet("OPTIONS");
    },
-   propfindURL: function() {
-      this.handleSend("PROPFIND");
+   sendCustomCommand: function(method) {
+      this.handleSend(method);
    },
-   copyURL: function() {
-      this.handleGet("COPY");
-   },
-   moveURL: function() {
-      this.handleGet("MOVE");
+   getCustomCommand: function(method) {
+      this.handleGet(method);
    },
    
    handleSend: function(method) {
@@ -1520,35 +1558,29 @@ trim: function(s) {
 },
 getMethod: function (readIn ) { 
 	var method = null;
-		if (readIn.indexOf("GET") == 0) {
-			method = "GET";
-		}
-		else if (readIn.indexOf("POST") == 0) {
-			method = "POST";
-		}
-		else if (readIn.indexOf("PUT") == 0) {
-			method = "PUT";
-		}
-		else if (readIn.indexOf("DELETE") == 0) {
-			method = "DELETE";
-		}
-		else if (readIn.indexOf("HEAD") == 0) {
-			method = "HEAD";
-		}
-		else if (readIn.indexOf("OPTIONS") == 0) {
-			method = "OPTIONS";
-		}
-		else if (readIn.indexOf("COPY") == 0) {
-			method = "COPY";
-		}
-		else if (readIn.indexOf("MOVE") == 0) {
-			method = "MOVE";
-		}
-		else if (readIn.indexOf("PROPFIND") == 0) {
-			method = "PROPFIND";
-		}
-		return method;
-	},
+	if (readIn.indexOf("GET") == 0) {
+		method = "GET";
+	}
+	else if (readIn.indexOf("POST") == 0) {
+		method = "POST";
+	}
+	else if (readIn.indexOf("PUT") == 0) {
+		method = "PUT";
+	}
+	else if (readIn.indexOf("DELETE") == 0) {
+		method = "DELETE";
+	}
+	else if (readIn.indexOf("HEAD") == 0) {
+		method = "HEAD";
+	}
+	else if (readIn.indexOf("OPTIONS") == 0) {
+		method = "OPTIONS";
+	}
+	else {
+		method = readIn;
+	}
+	return method;
+},
 executeRawRequest: function( requestStr ) {
 	// create a Request
 	var dateStamp = new Date().getTime();
